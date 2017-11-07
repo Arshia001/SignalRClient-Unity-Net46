@@ -10,7 +10,7 @@ This is a port of Microsoft.AspNet.SignalR.Client which uses the new .Net 4.6 co
 The library has been tested to work on Windows Desktop and Android. It is also fully compatible with Il2cpp (tested on Android), which means it should work on pretty much any platform that Unity supports, but I haven't tested that out yet.
 
 # Usage
-Using this port is similar to the original SignalR client. However, instead of strongly typed template functions, you get JSON objects to work with when making and receiving calls to/from the server:
+Using this port is similar to the original SignalR client. However, instead of strongly typed template functions, you get JSON objects to work with when making and receiving calls to/from the server. Also note that you need a MainThreadDispatcher object in your scene for the library to work.
 
 ```
 using NotSoSimpleJSON;
