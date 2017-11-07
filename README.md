@@ -20,7 +20,7 @@ using UnityEngine;
 public class SignalRConnectionHandler : MonoBehaviour
 {
     HubConnection Connection;
-	IHubProxy HubProxy;
+    IHubProxy HubProxy;
 
     async void Start()
     {
@@ -28,41 +28,41 @@ public class SignalRConnectionHandler : MonoBehaviour
             
         Connection = new HubConnection("http://myserver.com:8080");
         Connection.TraceLevel = TraceLevels.All;
-            Connection.TraceWriter = new UnityConsoleTextWriter();
+        Connection.TraceWriter = new UnityConsoleTextWriter();
 
         HubProxy = Connection.CreateHubProxy("MyHub");
-		// Note: no template arguments. The library instead
-		// passes a JSONArray containing all parameters to
-		// the callback method.
+        // Note: no template arguments. The library instead
+        // passes a JSONArray containing all parameters to
+        // the callback method.
         HubProxy.On("MyCallback", OnMyCallback);
             
         await Connection.Start();
         Debug.Log("Connected");
 
-		// Note: basic CLR types and any object implementing
-		// IJSONSerializable can be used as an argument. 
-		// The result is of type JSONNode, which can be a
-		// single value or a JSON hierarchy depending on
-		// what the server returns.
+        // Note: basic CLR types and any object implementing
+        // IJSONSerializable can be used as an argument. 
+        // The result is of type JSONNode, which can be a
+        // single value or a JSON hierarchy depending on
+        // what the server returns.
         var CallResult = await HubProxy.Invoke("MyMethod", arg1, arg2);
     }
 
     private void OnDestroy()
     {
-	    // Note: this will be a blocking call. This is how
-	    // the original SignalR client is implemented by
-	    // Microsoft.
+        // Note: this will be a blocking call. This is how
+        // the original SignalR client is implemented by
+        // Microsoft.
         Connection.Stop();
     }
 
-	// The JSONArray will contain all arguments to the function.
-	// They are accessible by index. Each of the arguments may
-	// be a single value or a JSON hierarchy depending on what
-	// the server returns.
+    // The JSONArray will contain all arguments to the function.
+    // They are accessible by index. Each of the arguments may
+    // be a single value or a JSON hierarchy depending on what
+    // the server returns.
     void OnMyCallback(JSONArray Args)
     {
-		var Arg1 = Args[0].AsInt;
-		var Arg2 = Args[1].AsString;
+        var Arg1 = Args[0].AsInt;
+        var Arg2 = Args[1].AsString;
     }
 }
 ```
