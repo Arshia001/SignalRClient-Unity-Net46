@@ -49,6 +49,9 @@ namespace Microsoft.AspNet.SignalR.Client.Hubs
 
         public static HubResult FromJson(JSONNode json)
         {
+            if (json == null)
+                return null;
+
             var Result = new HubResult();
 
             Result.Id = json["I"].AsString;

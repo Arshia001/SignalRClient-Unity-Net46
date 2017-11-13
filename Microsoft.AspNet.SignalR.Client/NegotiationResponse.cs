@@ -20,6 +20,9 @@ namespace Microsoft.AspNet.SignalR.Client
 
         public static NegotiationResponse FromJson(JSONNode json)
         {
+            if (json == null)
+                return null;
+
             var Result = new NegotiationResponse();
 
             Result.ConnectionId = json["ConnectionId"].AsString;

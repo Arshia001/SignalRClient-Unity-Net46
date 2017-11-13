@@ -47,6 +47,14 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override bool IsEmpty
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public JSONInt(int data)
         {
             this.data = data;

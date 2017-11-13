@@ -39,6 +39,14 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override bool IsEmpty
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public JSONBool(bool data)
         {
             this.data = data;

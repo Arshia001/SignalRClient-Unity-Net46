@@ -19,6 +19,9 @@ namespace Microsoft.AspNet.SignalR.Client.Hubs
 
         public static HubProgressUpdate FromJson(JSONNode json)
         {
+            if (json == null)
+                return null;
+
             var Result = new HubProgressUpdate();
 
             Result.Id = json["I"].AsString;

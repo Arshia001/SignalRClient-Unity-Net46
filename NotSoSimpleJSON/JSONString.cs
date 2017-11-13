@@ -58,6 +58,14 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override bool IsEmpty
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public JSONString(string data)
         {
             this.data = data;

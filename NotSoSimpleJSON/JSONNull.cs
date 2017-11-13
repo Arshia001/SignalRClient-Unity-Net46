@@ -21,6 +21,14 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override bool IsEmpty
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         protected override void WriteToStringBuilder(StringBuilder StringBuilder)
         {
             StringBuilder.Append("null");

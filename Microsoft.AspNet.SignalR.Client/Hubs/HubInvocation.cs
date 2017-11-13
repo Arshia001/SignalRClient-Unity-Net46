@@ -23,6 +23,9 @@ namespace Microsoft.AspNet.SignalR.Client.Hubs
 
         public static HubInvocation FromJson(JSONNode json)
         {
+            if (json == null)
+                return null;
+
             var Result = new HubInvocation();
 
             Result.CallbackId = json["I"].AsString;

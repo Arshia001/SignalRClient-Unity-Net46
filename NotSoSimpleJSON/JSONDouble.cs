@@ -47,6 +47,14 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override bool IsEmpty
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public JSONDouble(double data)
         {
             this.data = data;

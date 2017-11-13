@@ -74,6 +74,14 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override Dictionary<string, JSONNode> AsDictionary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public override int Count
         {
             get
