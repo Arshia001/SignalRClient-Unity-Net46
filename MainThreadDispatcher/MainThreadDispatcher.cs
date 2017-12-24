@@ -30,7 +30,14 @@ public class MainThreadDispatcher : MonoBehaviour
         void IDispatcher.ExecuteAll(MainThreadDispatcher Owner)
         {
             foreach (var A in ExecutionQueue)
-                A.Invoke();
+                try
+                {
+                    A.Invoke();
+                }
+                catch (Exception Ex)
+                {
+                    Debug.LogException(Ex);
+                }
 
             ExecutionQueue.Clear();
         }
@@ -54,7 +61,14 @@ public class MainThreadDispatcher : MonoBehaviour
         void IDispatcher.ExecuteAll(MainThreadDispatcher Owner)
         {
             foreach (var E in ExecutionQueue)
-                Owner.StartCoroutine(E);
+                try
+                {
+                    Owner.StartCoroutine(E);
+                }
+                catch (Exception Ex)
+                {
+                    Debug.LogException(Ex);
+                }
 
             ExecutionQueue.Clear();
         }
@@ -83,13 +97,36 @@ public class MainThreadDispatcher : MonoBehaviour
         void IDispatcher.ExecuteAll(MainThreadDispatcher Owner)
         {
             foreach (var E in ExecutionQueue)
-                E.TCS.SetResult(E.Func.Invoke());
+                try
+                {
+                    E.TCS.SetResult(E.Func.Invoke());
+                }
+                catch (Exception Ex)
+                {
+                    E.TCS.SetException(Ex);
+                }
 
             ExecutionQueue.Clear();
         }
     }
 
     private static readonly HashSet<IDispatcher> Dispatchers = new HashSet<IDispatcher>();
+
+    static bool IsMainThread()
+    {
+        return !System.Threading.Thread.CurrentThread.IsBackground;
+
+	// This approach works, but has potential performance penalties and creates unnecessary error messages in the log
+        //try
+        //{
+        //    var Dummy = Time.time;
+        //    return true;
+        //}
+        //catch
+        //{
+        //    return false;
+        //}
+    }
 
     public void Update()
     {
@@ -104,31 +141,40 @@ public class MainThreadDispatcher : MonoBehaviour
 
     public void Enqueue(Action Action)
     {
-        lock (Dispatchers)
-        {
-            ActionDispatcher.ExecutionQueue.Add(Action);
-            Dispatchers.Add(ActionDispatcher.Instance);
-        }
+        if (IsMainThread())
+            Action();
+        else
+            lock (Dispatchers)
+            {
+                ActionDispatcher.ExecutionQueue.Add(Action);
+                Dispatchers.Add(ActionDispatcher.Instance);
+            }
     }
 
     public void Enqueue(IEnumerator Coroutine)
     {
-        lock (Dispatchers)
-        {
-            CoroutineDispatcher.ExecutionQueue.Add(Coroutine);
-            Dispatchers.Add(CoroutineDispatcher.Instance);
-        }
+        if (IsMainThread())
+            StartCoroutine(Coroutine);
+        else
+            lock (Dispatchers)
+            {
+                CoroutineDispatcher.ExecutionQueue.Add(Coroutine);
+                Dispatchers.Add(CoroutineDispatcher.Instance);
+            }
     }
 
     public Task<T> Enqueue<T>(Func<T> Action)
     {
-        lock (Dispatchers)
-        {
-            var TCS = new TaskCompletionSource<T>();
-            FuncDispatcher<T>.ExecutionQueue.Add(new FuncDispatcher<T>.ExecItem { Func = Action, TCS = TCS });
-            Dispatchers.Add(FuncDispatcher<T>.Instance);
-            return TCS.Task;
-        }
+        if (IsMainThread())
+            return Task.FromResult(Action());
+        else
+            lock (Dispatchers)
+            {
+                var TCS = new TaskCompletionSource<T>();
+                FuncDispatcher<T>.ExecutionQueue.Add(new FuncDispatcher<T>.ExecItem { Func = Action, TCS = TCS });
+                Dispatchers.Add(FuncDispatcher<T>.Instance);
+                return TCS.Task;
+            }
     }
 
     public static MainThreadDispatcher Instance { get; private set; }

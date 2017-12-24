@@ -29,6 +29,62 @@ namespace NotSoSimpleJSON
             }
         }
 
+        public override JSONArray AsArray
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public override bool? AsBool
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public override int? AsInt
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public override double? AsDouble
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public override Dictionary<string, JSONNode> AsDictionary
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public override JSONObject AsObject
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public override string AsString
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         protected override void WriteToStringBuilder(StringBuilder StringBuilder)
         {
             StringBuilder.Append("null");

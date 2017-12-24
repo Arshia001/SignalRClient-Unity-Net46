@@ -26,12 +26,17 @@ namespace NotSoSimpleJSON
                 return (JSONNode)data;
             if (data is IJSONSerializable)
                 return ((IJSONSerializable)data).ToJson();
-            if (data is int || data is int?)
-                return new JSONInt((int)data);
+            if (data is int || data is int?
+                || data is short || data is short?
+                || data is byte || data is byte?
+                || data is uint || data is uint?
+                || data is ushort || data is ushort?
+                || data is sbyte || data is sbyte?)
+                return new JSONInt(Convert.ToInt32(data));
             if (data is float || data is float? || data is double || data is double?)
-                return new JSONDouble((double)data);
+                return new JSONDouble(Convert.ToDouble(data));
             if (data is bool || data is bool?)
-                return new JSONBool((bool)data);
+                return new JSONBool(Convert.ToBoolean(data));
             if (data is string)
                 return new JSONString((string)data);
             if (data is IEnumerable)
